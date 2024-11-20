@@ -7,10 +7,75 @@ import Contact from './components/Contact';
 import Home1 from './components/Home1';
 import About from './components/About';
 import Nav from './components/Nav'
-
+import Myblog from './components/Myblog';
+import { useState} from 'react';
+import State from './components/State'
+import {useEffect} from 'react';
 
 
 function App() {
+  const [step, setStep] = useState('next')
+
+  const handleClick = () => {
+    if (step < 3)setStep(step + 1)
+  }
+  const handlePrev = () => {
+   if (step > 1) setStep(step - 1)
+  }
+  // const tempMovieData = [
+  //   {
+  //     imdbID: "tt1375666",
+  //     Title: "Inception",
+  //     Year: "2010",
+  //     Poster:
+  //       "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
+  //   },
+  //   {
+  //     imdbID: "tt0133093",
+  //     Title: "The Matrix",
+  //     Year: "1999",
+  //     Poster:
+  //       "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
+  //   },
+  //   {
+  //     imdbID: "tt6751668",
+  //     Title: "Parasite",
+  //     Year: "2019",
+  //     Poster:
+  //       "https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg",
+  //   },
+  // ];
+
+  const KEY = '92f1689b';
+  // const [query, setQuery] = useState("");
+  const [movies, setMovies] = useState([]);
+  // const [watched, setWatched] = useState(tempWatchedData);
+
+  useEffect(function(){
+    fetch(`http://www.omdbapi.com/?apikey=${KEY}&S=interstellar`).then((res) => res.json()).then((data) => setMovies(data.search));
+
+  }, [])
+
+  useEffect(function(){
+     async function fetchMovies(){
+      const res  = await fetch(`http://www.omdbapi.com/?apikey=${KEY}&S=interstellar`);
+       
+     const data = await res.json();
+     console.log(data.search);
+    }
+    fetchMovies()
+  }, []);
+
+  // const messages = [
+  //   "support",
+  //   "accelerate",
+  //   "Empower"
+  // ]
+  
+  // const Myblog = ({messages}) => {
+  //   const [mymessage, setMessage] = useState(messages[0])
+
+ 
   return (
     <>
     <Wrapper className='App'>
@@ -18,7 +83,10 @@ function App() {
      <Banner/>
      </Wrapper>
       <Nav/>
-
+      <Myblog />
+      <State handleClick={handleClick} handlePrev={handlePrev} step={step}/>
+    
+    <p>{movies}</p>
      <Routes>
       <Route path='/' element={App}/>
       <Route path='/home1' element={<Home1/>}/>
